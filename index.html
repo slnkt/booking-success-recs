@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Успешный экран записи — витамины (прототип)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1098D4;
+  --blue-light:#63BCE3;
+  --dark:#05131A;
+  --muted:#8CA0AC;
+  --bg:#F1F4F6;
+  --accent-bg:#EDF8FC;
+  --green:#27AE60;
+  --error:#d10714;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:"Montserrat",Arial,Helvetica,sans-serif;
+  font-size:14px;color:var(--dark);
+  background:var(--bg);
+  min-height:100vh;
+}
+button{font-family:inherit}
+[hidden]{display:none !important}
+
+.wrap{max-width:560px;margin:0 auto;padding:14px 12px 60px}
+.shell{
+  background:#fff;border-radius:26px;border:1px solid #ECEFF2;
+  padding:22px 20px;margin-bottom:14px;
+}
+
+/* ---------- header ---------- */
+.hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+.logo-chip{background:#CBE9F8;border-radius:16px;padding:13px 16px;display:flex}
+.logo-chip svg{height:15px;width:auto;fill:var(--blue)}
+.hd-right{display:flex;gap:10px}
+.icon-btn{
+  width:44px;height:44px;border-radius:50%;background:#F0F2F4;border:0;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;position:relative;
+}
+.badge{
+  position:absolute;top:-3px;right:-3px;
+  min-width:19px;height:19px;border-radius:10px;padding:0 5px;
+  background:var(--blue);color:#fff;font-size:10.5px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* ---------- success ---------- */
+.success{text-align:center;margin-bottom:26px}
+.s-check{
+  width:56px;height:56px;border-radius:50%;background:var(--green);
+  margin:0 auto 18px;display:flex;align-items:center;justify-content:center;
+}
+.success h1{font-size:20px;font-weight:600;margin-bottom:8px}
+.success p{font-size:13.5px;color:#5c6d78;line-height:1.45}
+
+.details{background:#F5F6F7;border-radius:16px;padding:4px 16px}
+.d-row{padding:13px 0;border-bottom:1px solid #E7EAEC}
+.d-row:last-child{border-bottom:0}
+.d-row span{display:block;font-size:12px;color:#98a4ad;margin-bottom:3px}
+.d-row b{font-size:14px;font-weight:600}
+
+/* ---------- prep ---------- */
+.prep{background:#EAF6FC;border-radius:16px;padding:18px 16px}
+.prep h3{font-size:14.5px;font-weight:600;line-height:1.4;margin-bottom:12px}
+.prep ol{padding-left:18px;font-size:12.5px;line-height:1.5}
+.prep li{margin-bottom:8px}
+.prep li:last-child{margin-bottom:0}
+
+.lk-btn{
+  width:100%;background:#F0F2F4;border:0;border-radius:14px;
+  padding:15px;font-size:14px;font-weight:600;color:var(--dark);
+  cursor:pointer;margin-top:14px;
+}
+
+/* ---------- showcase ---------- */
+.recs{background:var(--accent-bg);border-radius:16px;padding:16px 14px;margin-top:14px}
+.recs-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:12px}
+.recs-head h3{font-size:15px;font-weight:600}
+.recs-link{font-size:12.5px;font-weight:600;color:var(--blue);text-decoration:none;white-space:nowrap}
+.rail{
+  display:flex;gap:8px;overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  margin:0 -14px;padding:0 14px 4px;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.rail::-webkit-scrollbar{display:none}
+.p-card{
+  width:146px;flex:none;background:#fff;border-radius:14px;padding:10px;
+  scroll-snap-align:start;display:flex;flex-direction:column;
+}
+.p-img{
+  height:92px;border-radius:10px;background:var(--accent-bg);
+  display:flex;align-items:center;justify-content:center;position:relative;
+}
+.p-inb{
+  position:absolute;top:6px;left:6px;
+  background:var(--blue);color:#fff;font-size:10px;font-weight:700;
+  border-radius:6px;padding:3px 6px;
+}
+.p-name{font-size:12px;font-weight:600;line-height:1.35;margin:8px 0 2px;flex:1}
+.p-price{font-size:13.5px;font-weight:700;margin-bottom:8px}
+.p-btn{
+  border:0;border-radius:9px;padding:9px;font-size:12px;font-weight:600;color:#fff;
+  background:linear-gradient(90deg,var(--blue),var(--blue-light));cursor:pointer;
+}
+.p-btn:active{opacity:.85}
+
+/* ---------- promo footer ---------- */
+.promo{background:#E9EEF1;text-align:center;padding:46px 20px;border:0}
+.promo h2{
+  font-size:23px;font-weight:600;line-height:1.35;margin-bottom:24px;
+  display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px 10px;
+}
+.promo h2 svg{height:20px;width:auto;fill:var(--dark);position:relative;top:2px}
+.socials{display:flex;gap:10px;justify-content:center}
+.soc{
+  width:44px;height:44px;border-radius:12px;background:#fff;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* ---------- sheet (модалка) ---------- */
+.sheet{
+  position:fixed;inset:0;z-index:80;background:rgba(5,19,26,.45);
+  display:flex;align-items:flex-end;justify-content:center;
+}
+.sheet-card{
+  background:#fff;border-radius:22px 22px 0 0;
+  padding:26px 20px calc(22px + env(safe-area-inset-bottom));
+  width:100%;max-width:560px;text-align:center;
+}
+@media(min-width:640px){
+  .sheet{align-items:center;padding:20px}
+  .sheet-card{border-radius:22px}
+}
+.sh-check{
+  width:48px;height:48px;border-radius:50%;background:var(--green);
+  margin:0 auto 14px;display:flex;align-items:center;justify-content:center;
+}
+.sheet-card h3{font-size:17px;font-weight:600;margin-bottom:6px}
+.sh-item{font-size:13.5px;line-height:1.4;margin-bottom:4px}
+.sh-cart{font-size:12.5px;color:#5c6d78;margin-bottom:18px}
+.ghost{
+  width:100%;border:0;background:none;color:var(--blue);
+  font-size:14px;font-weight:600;padding:12px;cursor:pointer;margin-top:2px;
+}
+.btn{
+  display:flex;align-items:center;justify-content:center;
+  width:100%;border:0;border-radius:12px;padding:15px 20px;
+  font-size:14px;font-weight:600;color:#fff;
+  background:linear-gradient(90deg,var(--blue),var(--blue-light));
+  cursor:pointer;transition:opacity .15s;
+}
+.btn:active{opacity:.85}
+
+/* ---------- cart (мок) ---------- */
+.cart{position:fixed;inset:0;z-index:60;background:var(--bg);overflow-y:auto}
+.cart-inner{max-width:560px;margin:0 auto;padding:20px 16px 60px}
+.cart-back{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:13px;font-weight:500;color:var(--blue);
+  background:none;border:0;cursor:pointer;padding:6px 0;margin-bottom:8px;
+}
+.cart h2{font-size:24px;font-weight:600;margin-bottom:18px}
+.cart-item{
+  background:#fff;border-radius:16px;padding:16px;
+  display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;
+}
+.cart-item .ci-info{flex:1}
+.ci-name{font-size:14px;font-weight:600;line-height:1.35}
+.ci-src{
+  display:inline-block;font-size:11px;font-weight:600;color:var(--blue);
+  background:var(--accent-bg);border-radius:6px;padding:3px 8px;margin-top:6px;
+}
+.ci-qty{font-size:12.5px;color:var(--muted);margin-top:6px}
+.ci-price{font-size:14px;font-weight:600;white-space:nowrap}
+.cart-total{
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding:16px 4px 14px;font-size:15px;
+}
+.cart-total b{font-size:20px;font-weight:700}
+
+/* ---------- proto panel ---------- */
+.fab{
+  position:fixed;right:14px;bottom:20px;z-index:70;
+  background:var(--dark);color:#fff;border:0;border-radius:24px;
+  padding:11px 16px;font-size:12.5px;font-weight:600;
+  cursor:pointer;box-shadow:0 6px 18px rgba(5,19,26,.3);
+}
+.panel{
+  position:fixed;right:14px;bottom:70px;z-index:70;
+  width:290px;max-width:calc(100vw - 28px);
+  max-height:calc(100vh - 130px);overflow-y:auto;
+  background:#fff;border-radius:16px;
+  box-shadow:0 10px 40px rgba(5,19,26,.25);
+  padding:18px;display:none;
+}
+.panel.open{display:block}
+.panel h4{font-size:13px;font-weight:700;margin-bottom:10px}
+.panel .grp{margin-bottom:16px}
+.panel .grp:last-child{margin-bottom:0}
+.panel label{
+  display:flex;align-items:flex-start;gap:9px;
+  font-size:12.5px;line-height:1.4;padding:7px 8px;border-radius:10px;cursor:pointer;
+}
+.panel label:hover{background:#F3F6F9}
+.panel input{accent-color:var(--blue);margin-top:2px;flex:none}
+.panel label.sel{background:var(--accent-bg);font-weight:600}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><symbol id="wm" viewBox="147.9 256.4 299.6 82.4">
+<path d="M193.2236633,278.9363708c2.300293,2.300293,4.1000977,5.0004883,5.5004883,8.2006836 c1.2998047,3.2001953,2,6.6005859,2,10.5004883c0,4.0004883-0.7001953,7.4003906-2,10.6005859 c-1.2001953,3.0004883-3.2001953,5.9003906-5.5004883,8.2006836s-5.2001953,4.300293-8.4003906,5.5004883 c-3.2001953,1.2998047-6.9003906,2-10.5004883,2c-3.800293,0-7.3007812-0.7001953-10.5009766-2 c-3.2001953-1.4003906-6.1000977-3.2001953-8.4003906-5.5004883s-4.300293-5.0004883-5.5004883-8.2006836 c-1.2998047-3.1000977-2-6.6000977-2-10.6005859v-1.699707v-39.5024414h9.6005859v41.1020508 c0,2.6005859,0.6000977,5.3007812,2.2001953,8.5009766c0.8999023,2.3999023,2.1000977,4.1000977,3.7001953,5.6000977 c1.3999023,1.3999023,3.2001953,2.5,5.2001953,3.2001953c3.7001953,1.2001953,8.0004883,1.2001953,11.7006836,0 c1.800293-0.7001953,3.6005859-1.800293,5.2001953-3.2001953c1.6005859-1.5,2.9003906-3.4003906,3.800293-5.6000977 c0.9003906-2.300293,1.4003906-5.0004883,1.4003906-8.0004883c0-3.2001953-0.5-5.9003906-1.4003906-8.2006836 c-1.1000977-2.5-3.800293-5.2001953-5.6000977-6.300293c-4.6005859-2.800293-7.8007812-2.7001953-12.4008789-2.7001953h-3.300293 v-8.9008789h0.6000977c4.4003906,0,10.3007812,0.2001953,14.8007812,1.300293 C187.1235657,274.1360779,190.9233704,276.7366638,193.2236633,278.9363708z"/>
+<path d="M226.7202454,271.6360779v52.1030273h-10.2006836v-52.1030273H226.7202454z"/>
+<path d="M278.8213196,273.7361755c3.2001953,1.2001953,6.0004883,2.9003906,8.3007812,5.2001953 c2.2001953,2.300293,4.1000977,4.9003906,5.4003906,8.2006836c1.3999023,3.2001953,1.8999023,6.7001953,1.8999023,10.4003906 c0,3.6005859-0.7001953,7.1005859-1.8999023,10.3007812c-1.4003906,3.1000977-3.2001953,5.800293-5.4003906,8.2006836 c-2.300293,2.300293-5.1005859,4-8.3007812,5.4003906c-3.1000977,1.2998047-6.6000977,2-10.300293,2 c-3.6005859,0-7.1005859-0.7001953-10.3007812-2c-3.1000977-1.2001953-5.9003906-3.1000977-8.2006836-5.4003906 c-2.2001953-2.300293-4.2001953-5.1005859-5.4003906-8.2006836c-1.3999023-3.2001953-1.8999023-6.5004883-1.8999023-10.3007812 c0-3.7001953,0.7001953-7.2001953,1.8999023-10.4003906c1.4003906-3.1000977,3.2001953-5.9003906,5.4003906-8.2006836 c2.300293-2.2998047,5.1005859-4,8.2006836-5.2001953c3.2001953-1.2998047,6.7001953-2,10.3007812-2 C272.2212219,271.7361755,275.7212219,272.4363708,278.8213196,273.7361755z M274.3213196,313.9388123 c1.8999023-0.800293,3.5-1.800293,5.1000977-3.2001953c1.5-1.4003906,2.800293-3.1000977,3.6000977-5.4003906 c0.9003906-2.1000977,1.4003906-4.9003906,1.4003906-7.9003906c0-3.1005859-0.5-5.9003906-1.4003906-8.0004883 c-0.7998047-2.300293-2.1000977-4.1005859-3.6000977-5.5004883c-1.6000977-1.3999023-3.300293-2.4003906-5.300293-3.1000977 c-1.8999023-0.7001953-3.800293-1.1000977-5.7001953-1.1000977c-1.9003906,0-3.9003906,0.3999023-5.800293,1.1000977 c-1.9003906,0.699707-3.7001953,1.7001953-5.2006836,3.1000977c-1.6000977,1.3999023-2.7998047,3.2001953-3.7001953,5.5004883 c-0.8999023,2.2001953-1.3999023,4.8999023-1.3999023,8.0004883c0,3.2001953,0.5,5.800293,1.3999023,7.9003906 c0.9003906,2.1000977,2.1000977,4,3.7001953,5.4003906c1.5004883,1.3999023,3.1005859,2.3999023,5.0004883,3.2001953 c2.1000977,0.699707,4.2001953,1,6.1005859,1C270.5210266,314.9388123,272.420929,314.6385193,274.3213196,313.9388123z"/>
+<path d="M347.8198547,277.9363708c2.5009766,2.6000977,4.0009766,5.1005859,4.3007812,7.6005859 c0.4003906,2.800293,0.7001953,5.7001953,0.7001953,8.800293v29.4018555H343.02005v-29.1015625 c0-1.6000977-0.0996094-3.4003906-0.2998047-5.0004883c-0.2001953-2.1000977-0.9003906-3.7001953-2.2001953-5.300293 c-0.9003906-1.2998047-2.2001953-2.2001953-3.6005859-2.8999023c-1.5-0.800293-3.2998047-1.1000977-5.2998047-1.1000977 s-3.8007812,0.2998047-5.2011719,1.1000977c-1.5,0.699707-2.7998047,1.6000977-3.7001953,2.8999023 c-1.1992188,1.6000977-2,3.4003906-2.0996094,5.300293c-0.2001953,1.800293-0.4003906,3.4003906-0.4003906,5.0004883v29.1015625 h-9.7998047v-29.2016602c0-3.1000977,0.1992188-6.0004883,0.6992188-8.800293 c0.6005859-2.7001953,2.2001953-5.2006836,4.6005859-7.8007812c1.2001953-1.3999023,2.7001953-2.5,4.1005859-3.300293 c1.7001953-0.699707,3.0996094-1.3999023,4.5996094-1.7998047c1.4003906-0.5,2.9003906-0.7001953,4.1005859-0.9003906 c1.5-0.199707,2.6005859-0.199707,3.5-0.199707c0.9003906,0,1.8007812,0,3.1005859,0.199707 c1.2001953,0.2001953,2.7001953,0.6000977,4.0996094,0.9003906c1.5009766,0.3999023,2.9003906,0.8999023,4.4003906,1.7998047 C345.02005,275.6365662,346.52005,276.6365662,347.8198547,277.9363708z"/>
+<path d="M378.8188782,271.6360779v52.1030273h-10.2001953v-52.1030273H378.8188782z"/>
+<path d="M445.52005,287.6370544c1.3007812,3.2001953,2.0009766,6.800293,1.8007812,10.3007812v40.9023438h-9.6005859 v-40.9023438c0-2.5004883-0.7001953-5.1005859-1.9003906-8.2006836c-0.9003906-2.300293-2.2001953-4.1000977-3.7998047-5.5004883 c-1.4003906-1.3999023-3.2001953-2.5-5.1005859-3.2001953c-3.7001953-1.199707-8.0009766-1.199707-11.7011719,0 c-1.7998047,0.7001953-3.5,1.800293-5.0996094,3.2001953c-1.6005859,1.4003906-2.9003906,3.4003906-3.8007812,5.5004883 c-0.8994141,2.300293-1.3994141,5.0004883-1.3994141,8.0004883c0,3.2001953,0.5,5.9003906,1.3994141,8.2006836 c1.1005859,2.5,3.8007812,5.2001953,5.5009766,6.2001953c4.5996094,2.9003906,7.7998047,2.7001953,12.4003906,2.7001953h3.2001953 v8.9003906h-0.5c-4.6005859,0-10.3007812-0.199707-14.7011719-1.2998047c-3.7001953-0.8999023-7.5-3.5004883-9.8007812-5.7006836 c-2.2998047-2.2998047-4.2001953-4.8999023-5.5-8.1000977c-1.2001953-3.2001953-1.9003906-6.6005859-1.9003906-10.5009766 c0-3.8999023,0.7001953-7.300293,1.9003906-10.5004883c1.2998047-3,3.2001953-5.9003906,5.5-8.2006836 c2.3007812-2.2998047,5.2001953-4.2001953,8.4013672-5.5c6.5-2.6000977,14.5-2.6000977,20.9003906,0 c3.2001953,1.3999023,6.0009766,3.2001953,8.3007812,5.5C442.3198547,281.7366638,444.3208313,284.4368591,445.52005,287.6370544z"/>
+</symbol></svg>
+
+<div class="wrap">
+
+  <!-- ======= шапка + успех + детали ======= -->
+  <section class="shell">
+    <header class="hd">
+      <div class="logo-chip"><svg viewBox="0 0 299.6 82.4" width="86"><use href="#wm"/></svg></div>
+      <div class="hd-right">
+        <button class="icon-btn" id="cartBtn" aria-label="Корзина">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 3h2l1.6 9.2a1.6 1.6 0 0 0 1.58 1.3h6.9a1.6 1.6 0 0 0 1.56-1.22L18.4 6H5.5" stroke="#05131A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8.6" cy="17" r="1.3" fill="#05131A"/><circle cx="14.6" cy="17" r="1.3" fill="#05131A"/></svg>
+          <span class="badge" id="cartBadge" hidden>0</span>
+        </button>
+        <button class="icon-btn" aria-label="Меню">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="none"><path d="M1 1h16M1 6h16M1 11h16" stroke="#05131A" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="success">
+      <div class="s-check">
+        <svg width="24" height="20" viewBox="0 0 24 20" fill="none"><path d="M2 10.5l7 7L22 2.5" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h1>Заявка создана!</h1>
+      <p>Подтверждение придёт по СМС и в личный кабинет</p>
+    </div>
+
+    <div class="details">
+      <div class="d-row"><span>Адрес</span><b>м. Парк Культуры, Зубовский бульвар, д. 22/39</b></div>
+      <div class="d-row"><span>Дата посещения</span><b>17 августа 2026 г.</b></div>
+      <div class="d-row"><span>Режим работы</span><b>Пн-Вс 8:00-13:00</b></div>
+    </div>
+  </section>
+
+  <!-- ======= подготовка + витрина + кнопка ======= -->
+  <section class="shell">
+    <div class="prep">
+      <h3>Рекомендация по подготовке к&nbsp;сдаче крови</h3>
+      <ol id="prepList"></ol>
+    </div>
+
+    <div id="recsSlot"></div>
+
+    <button class="lk-btn">В личный кабинет</button>
+
+    <div id="recsSlotB"></div>
+  </section>
+
+  <!-- ======= промо ======= -->
+  <section class="shell promo">
+    <h2>Узнать больше о <svg viewBox="0 0 299.6 82.4" width="110"><use href="#wm"/></svg></h2>
+    <div class="socials">
+      <div class="soc"><svg width="20" height="18" viewBox="0 0 20 18" fill="none"><path d="M18.7 1.2L1.6 7.8c-.8.3-.8 1.4.05 1.7l4.3 1.4 1.6 5.1c.25.8 1.25 1 1.8.4l2.4-2.5 4.5 3.3c.7.5 1.7.1 1.9-.75L20 2.3c.2-.9-.6-1.5-1.3-1.1z" stroke="#05131A" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
+      <div class="soc"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 1.8a8.2 8.2 0 0 0-7 12.4L2 18l3.9-1a8.2 8.2 0 1 0 4.1-15.2z" stroke="#05131A" stroke-width="1.3" stroke-linejoin="round"/><path d="M7.1 6.4c.4-.9 1.3-.9 1.6-.1l.5 1.2c.13.33.03.7-.25.95l-.55.5c.5 1.1 1.4 2 2.5 2.5l.5-.55c.25-.28.62-.38.95-.25l1.2.5c.8.3.8 1.2-.1 1.6-1 .45-2.2.4-3.3-.15a8.4 8.4 0 0 1-3.2-3.2c-.55-1.1-.6-2.3-.15-3z" stroke="#05131A" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
+      <div class="soc"><span style="font-size:13px;font-weight:700;color:#05131A">VK</span></div>
+      <div class="soc"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.6 1.6c.6-.6 1.6-.5 2.1.2l1.5 2.1c.4.55.35 1.3-.1 1.8l-.8.9c.7 1.5 1.9 2.7 3.4 3.4l.9-.8c.5-.45 1.25-.5 1.8-.1l2.1 1.5c.7.5.8 1.5.2 2.1l-1 1c-.6.6-1.5.85-2.3.6-5-1.5-8.9-5.4-10.4-10.4-.25-.8 0-1.7.6-2.3l1-1z" stroke="#05131A" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
+    </div>
+  </section>
+</div>
+
+<!-- модалка добавления -->
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet-card">
+    <div class="sh-check">
+      <svg width="20" height="16" viewBox="0 0 24 20" fill="none"><path d="M2 10.5l7 7L22 2.5" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <h3>Добавлено в корзину</h3>
+    <div class="sh-item" id="shItem"></div>
+    <div class="sh-cart" id="shCart"></div>
+    <button class="btn" id="shToCart">Перейти в корзину</button>
+    <button class="ghost" id="shContinue">Продолжить</button>
+  </div>
+</div>
+
+<!-- корзина (мок) -->
+<div class="cart" id="cart" hidden>
+  <div class="cart-inner">
+    <button class="cart-back" id="cartBack">
+      <svg width="14" height="12" viewBox="0 0 14 12" fill="none"><path d="M6 1L1 6l5 5M1 6h12" stroke="#1098D4" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Вернуться
+    </button>
+    <h2>Корзина</h2>
+    <div id="cartItems"></div>
+    <div class="cart-total"><span>Итого</span><b id="cartTotal">0 ₽</b></div>
+    <button class="btn">Перейти к оплате</button>
+  </div>
+</div>
+
+<!-- панель прототипа -->
+<button class="fab" id="fab">Настройки прототипа</button>
+<div class="panel" id="panel">
+  <div class="grp">
+    <h4>Состояние</h4>
+    <div id="grpState"></div>
+  </div>
+  <div class="grp">
+    <h4>Размещение блока</h4>
+    <div id="grpPlace"></div>
+  </div>
+</div>
+
+<script>
+const PRODUCTS = [
+  {id:'d3',    name:'Bioniq Витамин D3 2 000 МЕ',            price:1490, cap:'#1098D4'},
+  {id:'omega', name:'Bioniq OMEGA VEGAN',                     price:3490, cap:'#05131A'},
+  {id:'mg',    name:'Bioniq Магний цитрат',                   price:1990, cap:'#63BCE3'},
+  {id:'b',     name:'Bioniq Комплекс витаминов группы B',     price:2490, cap:'#1098D4'},
+  {id:'c',     name:'Bioniq Липосомальный витамин C',         price:2190, cap:'#05131A'},
+  {id:'zn',    name:'Bioniq Цинк и селен',                    price:1690, cap:'#63BCE3'},
+];
+
+const PREP_SHORT = [
+  'Возьмите с собой паспорт',
+  'Забор крови выполняется строго натощак',
+  'За 48 часов откажитесь от алкогольных напитков и интенсивных тренировок',
+  'За день до процедуры откажитесь от жирной пищи',
+  'Утром перед взятием крови обойдитесь без кофе и чая',
+  'За полтора часа до взятия биоматериала рекомендуем проснуться, пить больше чистой воды и воздержаться от курения',
+  'В день процедуры убедитесь, что не чувствуете недомогания или симптомов простуды',
+];
+const PREP_LONG = PREP_SHORT.concat([
+  'Приходите за 10 минут до открытия, чтобы спокойно оформить документы',
+  'Если принимаете лекарства утром, обсудите с врачом перенос приёма',
+  'За 24 часа исключите приём витаминов и добавок, если врач не сказал иначе',
+  'Постарайтесь выспаться и избегать стресса накануне',
+  'После сдачи крови позавтракайте и выпейте воды',
+  'Результаты появятся в личном кабинете, уведомление придёт по СМС',
+  'Если почувствуете слабость после забора, сообщите медсестре',
+]);
+
+const STATES = [
+  {id:1, label:'Блок с товарами, корзина пуста'},
+  {id:2, label:'Товар добавлен, модалка'},
+  {id:3, label:'В корзине уже есть эта позиция'},
+  {id:5, label:'Длинный список подготовки + блок'},
+  {id:4, label:'Товары не подгрузились'},
+];
+const PLACES = [
+  {id:'A', label:'До кнопки «В личный кабинет» (по ТЗ)'},
+  {id:'B', label:'После кнопки — идея для сравнения'},
+];
+
+let state = 1;
+let place = 'A';
+let cart = {};            // id -> qty
+let blockVisible = true;
+
+const fmt = n => n.toLocaleString('ru-RU') + ' ₽';
+function plural(n, forms){
+  return n%10===1 && n%100!==11 ? forms[0]
+    : (n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? forms[1] : forms[2]);
+}
+function jarSVG(cap){
+  return `<svg viewBox="0 0 64 82" width="56" height="72" fill="none">
+    <rect x="14" y="4" width="36" height="12" rx="4" fill="${cap}"/>
+    <rect x="17" y="16" width="30" height="4" fill="${cap}" opacity=".5"/>
+    <rect x="10" y="20" width="44" height="58" rx="10" fill="#fff" stroke="#DCE7EE"/>
+    <rect x="16" y="34" width="32" height="26" rx="6" fill="#EDF8FC"/>
+    <text x="32" y="50" text-anchor="middle" font-family="Montserrat,Arial" font-size="8" font-weight="600" fill="#05131A">bioniq</text>
+  </svg>`;
+}
+
+function cartCount(){ return Object.values(cart).reduce((s,q)=>s+q,0); }
+function cartTotal(){
+  return Object.entries(cart).reduce((s,[id,q])=>{
+    const p = PRODUCTS.find(x=>x.id===id);
+    return s + p.price*q;
+  },0);
+}
+
+/* ---------- витрина ---------- */
+function render(){
+  document.getElementById('recsSlot').innerHTML='';
+  document.getElementById('recsSlotB').innerHTML='';
+  if(blockVisible){
+    const slot = document.getElementById(place==='A'?'recsSlot':'recsSlotB');
+    slot.appendChild(buildRecs());
+  }
+  updateBadge();
+}
+
+function buildRecs(){
+  const el = document.createElement('section');
+  el.className='recs';
+  let html = `<div class="recs-head"><h3>Витамины Bioniq</h3><a class="recs-link" href="#">Все витамины</a></div>
+    <div class="rail">`;
+  for(const p of PRODUCTS){
+    const q = cart[p.id]||0;
+    html += `<div class="p-card">
+      <div class="p-img">${q?`<span class="p-inb">В корзине: ${q}</span>`:''}${jarSVG(p.cap)}</div>
+      <div class="p-name">${p.name}</div>
+      <div class="p-price">${fmt(p.price)}</div>
+      <button class="p-btn" data-id="${p.id}">В корзину</button>
+    </div>`;
+  }
+  html += `</div>`;
+  el.innerHTML = html;
+  el.querySelectorAll('.p-btn').forEach(b=>{
+    b.addEventListener('click',()=>addToCart(b.dataset.id));
+  });
+  return el;
+}
+
+function addToCart(id){
+  cart[id] = (cart[id]||0) + 1;
+  render();
+  openSheet(id);
+}
+
+/* ---------- модалка ---------- */
+function openSheet(id){
+  const p = PRODUCTS.find(x=>x.id===id);
+  const q = cart[id];
+  document.getElementById('shItem').textContent =
+    q>1 ? `${p.name} — теперь ${q} ${plural(q,['упаковка','упаковки','упаковок'])}` : p.name;
+  const n = cartCount();
+  document.getElementById('shCart').textContent =
+    `В корзине ${n} ${plural(n,['товар','товара','товаров'])} на ${fmt(cartTotal())}`;
+  document.getElementById('sheet').hidden = false;
+}
+function closeSheet(){ document.getElementById('sheet').hidden = true; }
+document.getElementById('shContinue').addEventListener('click', closeSheet);
+document.getElementById('sheet').addEventListener('click', e=>{ if(e.target.id==='sheet') closeSheet(); });
+document.getElementById('shToCart').addEventListener('click', ()=>{ closeSheet(); openCart(); });
+
+/* ---------- бейдж и корзина ---------- */
+function updateBadge(){
+  const b = document.getElementById('cartBadge');
+  const n = cartCount();
+  b.hidden = n===0;
+  b.textContent = n;
+}
+function openCart(){
+  const wrap = document.getElementById('cartItems');
+  const rows = Object.entries(cart).map(([id,q])=>{
+    const p = PRODUCTS.find(x=>x.id===id);
+    return `<div class="cart-item">
+      <div class="ci-info">
+        <div class="ci-name">${p.name}</div>
+        <span class="ci-src">Источник: успешный экран</span>
+        <div class="ci-qty">${q} ${plural(q,['упаковка','упаковки','упаковок'])}${q>1?` × ${fmt(p.price)}`:''}</div>
+      </div>
+      <div class="ci-price">${fmt(p.price*q)}</div>
+    </div>`;
+  });
+  wrap.innerHTML = rows.join('') || '<p style="color:#8CA0AC;font-size:13.5px">Корзина пуста</p>';
+  document.getElementById('cartTotal').textContent = fmt(cartTotal());
+  document.getElementById('cart').hidden = false;
+  document.body.style.overflow = 'hidden';
+}
+document.getElementById('cartBack').addEventListener('click', ()=>{
+  document.getElementById('cart').hidden = true;
+  document.body.style.overflow = '';
+});
+document.getElementById('cartBtn').addEventListener('click', openCart);
+
+/* ---------- подготовка ---------- */
+function renderPrep(list){
+  document.getElementById('prepList').innerHTML = list.map(t=>`<li>${t}</li>`).join('');
+}
+
+/* ---------- состояния ---------- */
+function applyState(){
+  cart = {};
+  blockVisible = true;
+  closeSheet();
+  renderPrep(state===5 ? PREP_LONG : PREP_SHORT);
+  if(state===2){ cart = {mg:1}; }
+  if(state===3){ cart = {d3:1}; }
+  if(state===4){ blockVisible = false; }
+  render();
+  if(state===2) openSheet('mg');
+}
+
+/* ---------- панель ---------- */
+const fab = document.getElementById('fab');
+const panel = document.getElementById('panel');
+fab.addEventListener('click',()=>panel.classList.toggle('open'));
+
+function radios(containerId, list, current, onPick){
+  const c = document.getElementById(containerId);
+  c.innerHTML='';
+  for(const it of list){
+    const l = document.createElement('label');
+    if(String(it.id)===String(current)) l.className='sel';
+    l.innerHTML = `<input type="radio" name="${containerId}" ${String(it.id)===String(current)?'checked':''}> ${it.label}`;
+    l.querySelector('input').addEventListener('change',()=>onPick(it.id));
+    c.appendChild(l);
+  }
+}
+function renderPanel(){
+  radios('grpState', STATES, state, id=>{state=id; renderPanel(); applyState();});
+  radios('grpPlace', PLACES, place, id=>{place=id; renderPanel(); render();});
+}
+
+/* init */
+renderPanel();
+applyState();
+if(window.innerWidth>900) panel.classList.add('open');
+</script>
+</body>
+</html>
