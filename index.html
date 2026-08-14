@@ -236,15 +236,6 @@ button{font-family:inherit}
 .toast.lifted{bottom:calc(88px + env(safe-area-inset-bottom))}
 .toast .t-ic{display:flex;flex:none}
 .toast .t-txt{flex:1;line-height:1.35}
-/* компактный список — как в GetYourGuide */
-.plist{display:flex;flex-direction:column;gap:8px}
-.l-card{display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;padding:10px 12px}
-.l-img{flex:none;width:56px;height:70px;background:#F4F6F8;border-radius:10px;display:flex;align-items:center;justify-content:center}
-.l-img svg{height:58px;width:auto}
-.l-info{flex:1;min-width:0}
-.l-name{font-size:13.5px;font-weight:600;line-height:1.3}
-.l-caps{font-size:11.5px;color:var(--muted);margin-top:2px}
-.l-price{font-size:15px;font-weight:700;margin-top:5px}
 .toast button{
   flex:none;border:0;cursor:pointer;white-space:nowrap;
   background:#fff;color:var(--dark);border-radius:22px;
@@ -368,10 +359,6 @@ body.has-bar .panel{bottom:142px}
     <div id="grpState"></div>
   </div>
   <div class="grp">
-    <h4>Формат витрины</h4>
-    <div id="grpFormat"></div>
-  </div>
-  <div class="grp">
     <h4>Размещение блока</h4>
     <div id="grpPlace"></div>
   </div>
@@ -395,10 +382,6 @@ const STATES = [
   {id:2, label:'Товар добавлен, подтверждение'},
   {id:3, label:'В корзине уже есть эта позиция'},
 ];
-const FORMATS = [
-  {id:'car',  label:'Карусель — по ТЗ'},
-  {id:'list', label:'Список — видно все позиции сразу'},
-];
 const PLACES = [
   {id:'A', label:'До кнопки «В личный кабинет» (по ТЗ)'},
   {id:'B', label:'После кнопки — идея для сравнения'},
@@ -409,7 +392,6 @@ const IDEAS = [
 
 let state = 1;
 let place = 'A';
-let format = 'car';
 let ideas = {cartbar:false};
 let cart = {};            // id -> qty
 let blockVisible = true;
@@ -457,7 +439,7 @@ function buildRecs(){
   const el = document.createElement('section');
   el.className='recs';
   let html = `<div class="recs-head"><h3>Рекомендации к покупке</h3><a class="recs-link" href="#">Все витамины</a></div>
-    <div class="${format==='car'?'rail':'plist'}">`;
+    <div class="rail">`;
   for(const p of PRODUCTS){
     const q = cart[p.id]||0;
     const control = q===0
@@ -467,24 +449,14 @@ function buildRecs(){
       : `<div class="stepper-s" data-id="${p.id}">
            <button data-dec="${p.id}">−</button><span>${q}</span><button data-inc="${p.id}">+</button>
          </div>`;
-    html += format==='car'
-      ? `<div class="p-card">
-          <div class="p-img">${bottleSVG()}</div>
-          <div class="p-name">${p.name}</div>
-          <div class="p-row">
-            <div class="p-pricecol"><div class="p-price">${fmt(p.price)}</div><div class="p-caps">${p.caps}</div></div>
-            ${control}
-          </div>
-        </div>`
-      : `<div class="l-card">
-          <div class="l-img">${bottleSVG()}</div>
-          <div class="l-info">
-            <div class="l-name">${p.name}</div>
-            <div class="l-caps">${p.caps}</div>
-            <div class="l-price">${fmt(p.price)}</div>
-          </div>
-          ${control}
-        </div>`;
+    html += `<div class="p-card">
+      <div class="p-img">${bottleSVG()}</div>
+      <div class="p-name">${p.name}</div>
+      <div class="p-row">
+        <div class="p-pricecol"><div class="p-price">${fmt(p.price)}</div><div class="p-caps">${p.caps}</div></div>
+        ${control}
+      </div>
+    </div>`;
   }
   html += `</div>`;
   el.innerHTML = html;
@@ -631,7 +603,6 @@ function checkboxes(containerId, list, stateObj, onPick){
 }
 function renderPanel(){
   radios('grpState', STATES, state, id=>{state=id; renderPanel(); applyState();});
-  radios('grpFormat', FORMATS, format, id=>{format=id; renderPanel(); render();});
   radios('grpPlace', PLACES, place, id=>{place=id; renderPanel(); render();});
   checkboxes('grpIdeas', IDEAS, ideas, (id,on)=>{
     ideas[id]=on;
