@@ -267,7 +267,22 @@ button{font-family:inherit}
 }
 .toast.show{transform:none;opacity:1;pointer-events:auto}
 .toast.lifted{bottom:calc(88px + env(safe-area-inset-bottom))}
+.toast .t-im{
+  flex:none;width:30px;height:38px;border-radius:7px;
+  background:rgba(255,255,255,.12);
+  display:flex;align-items:center;justify-content:center;
+}
+.toast .t-im svg{height:32px;width:auto}
 .toast .t-txt{flex:1;line-height:1.4}
+/* компактный список — как в GetYourGuide */
+.plist{display:flex;flex-direction:column;gap:8px}
+.l-card{display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;padding:10px 12px}
+.l-img{flex:none;width:56px;height:70px;background:#F4F6F8;border-radius:10px;display:flex;align-items:center;justify-content:center}
+.l-img svg{height:58px;width:auto}
+.l-info{flex:1;min-width:0}
+.l-name{font-size:13.5px;font-weight:600;line-height:1.3}
+.l-caps{font-size:11.5px;color:var(--muted);margin-top:2px}
+.l-price{font-size:15px;font-weight:700;margin-top:5px}
 .toast button{border:0;background:none;color:var(--blue-light);font-size:13px;font-weight:700;cursor:pointer;padding:4px 2px;white-space:nowrap}
 .cartbar{
   position:fixed;left:0;right:0;bottom:0;z-index:65;
@@ -381,6 +396,7 @@ body.has-bar .panel{bottom:142px}
 </div>
 
 <div class="toast" id="toast">
+  <span class="t-im" id="toastIm"></span>
   <span class="t-txt" id="toastTxt"></span>
   <button id="toastBtn">В корзину</button>
 </div>
@@ -397,6 +413,10 @@ body.has-bar .panel{bottom:142px}
   <div class="grp">
     <h4>Состояние</h4>
     <div id="grpState"></div>
+  </div>
+  <div class="grp">
+    <h4>Формат витрины</h4>
+    <div id="grpFormat"></div>
   </div>
   <div class="grp">
     <h4>Размещение блока</h4>
@@ -423,6 +443,10 @@ const STATES = [
   {id:3, label:'В корзине уже есть эта позиция'},
   {id:4, label:'Товары не подгрузились'},
 ];
+const FORMATS = [
+  {id:'car',  label:'Карусель — по ТЗ'},
+  {id:'list', label:'Список — видно все позиции сразу'},
+];
 const PLACES = [
   {id:'A', label:'До кнопки «В личный кабинет» (по ТЗ)'},
   {id:'B', label:'После кнопки — идея для сравнения'},
@@ -434,6 +458,7 @@ const IDEAS = [
 
 let state = 1;
 let place = 'A';
+let format = 'car';
 let ideas = {sheet:false, cartbar:false};
 let cart = {};            // id -> qty
 let blockVisible = true;
@@ -481,7 +506,7 @@ function buildRecs(){
   const el = document.createElement('section');
   el.className='recs';
   let html = `<div class="recs-head"><h3>Рекомендации к покупке</h3><a class="recs-link" href="#">Все витамины</a></div>
-    <div class="rail">`;
+    <div class="${format==='car'?'rail':'plist'}">`;
   for(const p of PRODUCTS){
     const q = cart[p.id]||0;
     const control = q===0
@@ -491,14 +516,24 @@ function buildRecs(){
       : `<div class="stepper-s" data-id="${p.id}">
            <button data-dec="${p.id}">−</button><span>${q}</span><button data-inc="${p.id}">+</button>
          </div>`;
-    html += `<div class="p-card">
-      <div class="p-img">${bottleSVG()}</div>
-      <div class="p-name">${p.name}</div>
-      <div class="p-row">
-        <div class="p-pricecol"><div class="p-price">${fmt(p.price)}</div><div class="p-caps">${p.caps}</div></div>
-        ${control}
-      </div>
-    </div>`;
+    html += format==='car'
+      ? `<div class="p-card">
+          <div class="p-img">${bottleSVG()}</div>
+          <div class="p-name">${p.name}</div>
+          <div class="p-row">
+            <div class="p-pricecol"><div class="p-price">${fmt(p.price)}</div><div class="p-caps">${p.caps}</div></div>
+            ${control}
+          </div>
+        </div>`
+      : `<div class="l-card">
+          <div class="l-img">${bottleSVG()}</div>
+          <div class="l-info">
+            <div class="l-name">${p.name}</div>
+            <div class="l-caps">${p.caps}</div>
+            <div class="l-price">${fmt(p.price)}</div>
+          </div>
+          ${control}
+        </div>`;
   }
   html += `</div>`;
   el.innerHTML = html;
@@ -560,6 +595,7 @@ document.getElementById('shToCart').addEventListener('click', ()=>{ closeSheet()
 function showToast(id){
   const p = PRODUCTS.find(x=>x.id===id);
   const q = cart[id];
+  document.getElementById('toastIm').innerHTML = bottleSVG();
   document.getElementById('toastTxt').textContent =
     q>1 ? `${p.name} — в корзине, ${q} ${plural(q,['упаковка','упаковки','упаковок'])}`
         : `${p.name} — в корзине`;
@@ -671,6 +707,7 @@ function checkboxes(containerId, list, stateObj, onPick){
 }
 function renderPanel(){
   radios('grpState', STATES, state, id=>{state=id; renderPanel(); applyState();});
+  radios('grpFormat', FORMATS, format, id=>{format=id; renderPanel(); render();});
   radios('grpPlace', PLACES, place, id=>{place=id; renderPanel(); render();});
   checkboxes('grpIdeas', IDEAS, ideas, (id,on)=>{
     ideas[id]=on;
