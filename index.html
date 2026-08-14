@@ -217,11 +217,10 @@ button{font-family:inherit}
 .panel label.sel{background:var(--accent-bg);font-weight:600}
 
 /* ---------- v3: карточки как в приложении ---------- */
-.recs .recs-head{margin-bottom:3px;gap:10px}
+.recs .recs-head{margin-bottom:12px;gap:10px}
 .recs-head h3{white-space:nowrap}
 .recs-link{font-size:12px;flex:none}
-.recs-sub{font-size:12.5px;color:#5c6d78;margin-bottom:12px}
-.p-card{width:158px;padding:12px 12px 14px}
+.p-card{width:190px;padding:12px 12px 14px}
 .p-img{
   height:132px;border-radius:12px;background:#F4F6F8;
   display:flex;align-items:center;justify-content:center;
@@ -229,8 +228,9 @@ button{font-family:inherit}
 .p-img svg{height:106px;width:auto}
 .p-name{font-size:13.5px;font-weight:600;line-height:1.3;margin:11px 0 0;min-height:35px}
 .p-row{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;margin-top:6px}
-.p-price{font-size:15px;font-weight:700;line-height:1.2;margin:0}
-.p-caps{font-size:11px;color:var(--muted);margin-top:2px}
+.p-pricecol{min-width:0}
+.p-price{font-size:15px;font-weight:700;line-height:1.2;margin:0;white-space:nowrap}
+.p-caps{font-size:11px;color:var(--muted);margin-top:2px;white-space:nowrap}
 .round-btn{
   width:34px;height:34px;border-radius:50%;flex:none;border:0;cursor:pointer;
   background:var(--blue);
@@ -238,9 +238,13 @@ button{font-family:inherit}
   transition:transform .12s;
 }
 .round-btn:active{transform:scale(.9)}
-.stepper-s{display:flex;align-items:center;height:34px;flex:none;border:1.5px solid #CFE5F2;border-radius:17px;background:#fff}
-.stepper-s button{width:28px;height:100%;border:0;background:none;font-size:15px;font-weight:600;color:var(--blue);cursor:pointer}
-.stepper-s span{min-width:20px;text-align:center;font-size:13px;font-weight:700}
+.stepper-s{
+  display:flex;align-items:center;justify-content:space-between;
+  height:34px;width:82px;flex:none;
+  border:1.5px solid #CFE5F2;border-radius:17px;background:#fff;
+}
+.stepper-s button{width:26px;height:100%;border:0;background:none;font-size:16px;font-weight:600;color:var(--blue);cursor:pointer}
+.stepper-s span{flex:1;text-align:center;font-size:13px;font-weight:700}
 .sheet-card{animation:sheetUp .28s cubic-bezier(.2,.8,.3,1)}
 @keyframes sheetUp{from{transform:translateY(44px);opacity:.4}to{transform:translateY(0);opacity:1}}
 .sh-prod{display:flex;align-items:center;gap:12px;text-align:left;background:var(--accent-bg);border-radius:14px;padding:10px 12px;margin:14px 0 10px}
@@ -318,7 +322,7 @@ body.has-bar .panel{bottom:142px}
 
     <div class="mailnote">
       <svg width="17" height="14" viewBox="0 0 17 14" fill="none"><rect x="1" y="1" width="15" height="12" rx="2.5" stroke="#1098D4" stroke-width="1.4"/><path d="M1.6 2.2l6.9 5 6.9-5" stroke="#1098D4" stroke-width="1.4" stroke-linecap="round"/></svg>
-      <span>Детали записи и памятку по подготовке отправим на почту</span>
+      <span>Подтверждение с информацией о записи отправим на почту</span>
     </div>
   </section>
 
@@ -424,13 +428,13 @@ const PLACES = [
   {id:'B', label:'После кнопки — идея для сравнения'},
 ];
 const IDEAS = [
-  {id:'toast', label:'Тост вместо модалки — подтверждение не прерывает'},
+  {id:'sheet', label:'Модалка вместо тоста — вариант из ТЗ'},
   {id:'cartbar', label:'Плашка корзины внизу после добавления'},
 ];
 
 let state = 1;
 let place = 'A';
-let ideas = {toast:false, cartbar:false};
+let ideas = {sheet:false, cartbar:false};
 let cart = {};            // id -> qty
 let blockVisible = true;
 let toastTimer = null;
@@ -477,7 +481,6 @@ function buildRecs(){
   const el = document.createElement('section');
   el.className='recs';
   let html = `<div class="recs-head"><h3>Рекомендации к покупке</h3><a class="recs-link" href="#">Все витамины</a></div>
-    <div class="recs-sub">Пригодятся после сдачи крови</div>
     <div class="rail">`;
   for(const p of PRODUCTS){
     const q = cart[p.id]||0;
@@ -526,13 +529,13 @@ function addToCart(id){
 function afterChange(id, grew){
   render();
   popBadge();
-  if(ideas.toast && grew && cart[id]) showToast(id);
+  if(!ideas.sheet && grew && cart[id]) showToast(id);
   if(!cart[id]) hideToast();
 }
 function confirmAdd(id){
   popBadge();
-  if(ideas.toast) showToast(id);
-  else openSheet(id);
+  if(ideas.sheet) openSheet(id);
+  else showToast(id);
 }
 
 /* ---------- модалка ---------- */
@@ -671,7 +674,7 @@ function renderPanel(){
   radios('grpPlace', PLACES, place, id=>{place=id; renderPanel(); render();});
   checkboxes('grpIdeas', IDEAS, ideas, (id,on)=>{
     ideas[id]=on;
-    if(id==='toast'){ closeSheet(); hideToast(); }
+    if(id==='sheet'){ closeSheet(); hideToast(); }
     renderPanel(); render();
   });
 }
