@@ -407,17 +407,17 @@ const STATES = [
   {id:3, label:'В корзине уже есть эта позиция'},
 ];
 const PLACES = [
-  {id:'A', label:'До кнопки «В личный кабинет» (по ТЗ)'},
-  {id:'B', label:'После кнопки — идея для сравнения'},
+  {id:'B', label:'После кнопки «В личный кабинет» — кнопка остаётся в первом экране'},
+  {id:'A', label:'До кнопки — с лентой кнопка уходит за первый экран'},
 ];
 const FORMATS = [
-  {id:'car',  label:'Карусель — по ТЗ'},
-  {id:'feed', label:'Лента вниз — бесконечная прокрутка, как в каталоге'},
+  {id:'feed', label:'Лента вниз — бесконечная прокрутка (основной вариант)'},
+  {id:'car',  label:'Карусель — для сравнения'},
 ];
 
 let state = 1;
-let place = 'A';
-let format = 'car';
+let place = 'B';
+let format = 'feed';
 let feedShown = FEED_START;
 let cart = {};            // id -> qty
 let blockVisible = true;
@@ -651,6 +651,7 @@ function renderPanel(){
 /* init */
 renderPanel();
 applyState();
+requestAnimationFrame(maybeLoadMore);
 if(window.innerWidth>900) panel.classList.add('open');
 </script>
 </body>
